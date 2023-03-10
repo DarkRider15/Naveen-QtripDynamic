@@ -4,7 +4,10 @@ import config from "../conf/index.js";
 function getAdventureIdFromURL(search) {
   // TODO: MODULE_ADVENTURE_DETAILS
   // 1. Get the Adventure Id from the URL
-
+  console.log(search)
+  let params = new URLSearchParams(search);
+  console.log(params.get('adventure'))
+ return params.get('adventure')
 
   // Place holder for functionality to work in the Stubs
   return null;
@@ -14,15 +17,37 @@ async function fetchAdventureDetails(adventureId) {
   // TODO: MODULE_ADVENTURE_DETAILS
   // 1. Fetch the details of the adventure by making an API call
 
+  try{
+    const data= await fetch(config.backendEndpoint+`/adventures/detail?adventure=${adventureId}`);
+   return await data.json();
+    
+   }
+  catch{
+    return null;
 
-  // Place holder for functionality to work in the Stubs
-  return null;
+  }
+   // Place holder for functionality to work in the Stubs
 }
 
 //Implementation of DOM manipulation to add adventure details to DOM
 function addAdventureDetailsToDOM(adventure) {
   // TODO: MODULE_ADVENTURE_DETAILS
   // 1. Add the details of the adventure to the HTML DOM
+  document.getElementById("adventure-name").append(adventure.name);
+  document.getElementById("adventure-subtitle").append(adventure.subtitle);
+  console.log(adventure["images"]);
+    for(let i=0;i<adventure.images.length;i++)
+   {
+    var div=document.createElement("div");
+    
+     var img=document.createElement("img");
+     img.setAttribute("class","activity-card-image");
+     img.src=adventure.images[i];
+     
+     div.append(img);
+     document.getElementById("photo-gallery").append(div);
+   }
+   document.getElementById("adventure-content").append(adventure.content);
 
 }
 
@@ -30,7 +55,34 @@ function addAdventureDetailsToDOM(adventure) {
 function addBootstrapPhotoGallery(images) {
   // TODO: MODULE_ADVENTURE_DETAILS
   // 1. Add the bootstrap carousel to show the Adventure images
-
+  let photoGallery = document.getElementById("photo-gallery")
+  photoGallery.innerHTML=`
+  <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="slide 3"></button>
+  </div>
+  <div class="carousel-inner"  id="carousel-inner">
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+  `
+  images.map((key,index)=>{
+    let divElement = document.createElement("div");
+    divElement.className=`carousel-item ${index===0?'active':''}`;
+    divElement.innerHTML=`
+      <img src=${key} class="activity-card-image pb-3"/>
+    `;
+    document.getElementById("carousel-inner").appendChild(divElement);
+  });
 }
 
 //Implementation of conditional rendering of DOM based on availability

@@ -90,7 +90,7 @@ function filterByDuration(list, low, high) {
   let filteredList=list.filter(function(e){
     return (e.duration>=low && e.duration<=high);
   })
-  console.log(filteredList);
+  // console.log(filteredList);
   return filteredList;
 
 }
